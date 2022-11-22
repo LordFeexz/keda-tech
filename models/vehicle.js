@@ -39,7 +39,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       checkinDate: DataTypes.DATE,
       checkoutDate: DataTypes.DATE,
-      price: DataTypes.INTEGER,
+      price: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,

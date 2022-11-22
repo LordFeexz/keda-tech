@@ -26,6 +26,21 @@ class Controller {
       next(err);
     }
   }
+
+  static async create(req, res, next) {
+    try {
+      const { type, plat } = req.body;
+
+      await Vehicle.create({
+        type,
+        plat,
+      });
+
+      res.status(201).json({ message: "success checkin" });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
