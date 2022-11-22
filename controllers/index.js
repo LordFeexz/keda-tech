@@ -5,9 +5,16 @@ const priceAdjuster = require("../helpers/price");
 class Controller {
   static async getAll(req, res, next) {
     try {
-      let { type, checkinDate, checkoutDate, minPrice, maxPrice } = req.body;
+      let { type, checkinDate, checkoutDate, minPrice, maxPrice, status } =
+        req.body;
 
-      let option = {};
+      if (!status) status = "done";
+
+      let option = {
+        where: {
+          status,
+        },
+      };
 
       if (checkinDate && !checkoutDate) checkoutDate = new Date();
 
@@ -25,6 +32,22 @@ class Controller {
               },
             },
           ],
+        };
+      }
+
+      if (minPrice) {
+        option.where = {
+          price: {
+            [Op.gt]: minPrice,
+          },
+        };
+      }
+
+      if (maxPrice) {
+        option.where = {
+          price: {
+            [Op.lt]: maxPrice,
+          },
         };
       }
 
