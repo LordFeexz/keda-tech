@@ -19,7 +19,7 @@ class Controller {
       if (checkinDate && !checkoutDate) checkoutDate = new Date();
 
       if (checkinDate) {
-        option.where = {
+        option.where.checkinDate = {
           [Op.or]: [
             {
               checkinDate: {
@@ -36,38 +36,26 @@ class Controller {
       }
 
       if (!checkinDate && checkoutDate) {
-        option.where = {
-          checkoutDate: {
-            [Op.lt]: checkoutDate,
-          },
+        option.where.checkoutDate = {
+          [Op.lt]: checkoutDate,
         };
       }
 
       if (minPrice && maxPrice) {
-        option.where = {
-          [Op.or]: [
-            {
-              price: {
-                [Op.between]: [minPrice, maxPrice],
-              },
-            },
-          ],
+        option.where.price = {
+          [Op.or]: [([Op.between] = [minPrice, maxPrice])],
         };
       }
 
       if (minPrice && !maxPrice) {
-        option.where = {
-          price: {
-            [Op.gt]: minPrice,
-          },
+        option.where.price = {
+          [Op.gt]: minPrice,
         };
       }
 
       if (maxPrice && !minPrice) {
-        option.where = {
-          price: {
-            [Op.lt]: maxPrice,
-          },
+        option.where.price = {
+          [Op.lt]: maxPrice,
         };
       }
 
