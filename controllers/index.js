@@ -1,11 +1,29 @@
 const { Vehicle, sequelize } = require("../models");
-const { QueryTypes } = require("sequelize");
+const { QueryTypes, Op } = require("sequelize");
 const priceAdjuster = require("../helpers/price");
 
 class Controller {
   static async getAll(req, res, next) {
     try {
-      const vehicle = await Vehicle.findAll();
+      const { type, checkinDate, checkoutDate, minPrice, maxPrice } = req.body;
+
+      let option = {};
+      option.where = {};
+
+      if (type) {
+        option.where.type = {
+          [Op.iLike]: `%${type}%`,
+        };
+      }
+
+      // if (checkinDate) {
+      //   option.where = {
+      //     from: {
+      //       $between: [checkinDate, checkoutDate],
+      //     },
+      //   };
+      // }
+      const vehicle = await Vehicle.findAll(option);
 
       if (!vehicle || vehicle.length <= 0) throw { name: "Data not found" };
 
