@@ -108,10 +108,12 @@ class Controller {
     try {
       const { id } = req.params;
 
-      await Vehicle.update(
+      const checkout = await Vehicle.update(
         { checkoutDate: new Date(), status: "done" },
         { where: { id } }
       );
+
+      if (!checkout) throw { name: "failed update" };
 
       const diff = await sequelize.query(
         `select *, (v."checkoutDate" - v."checkinDate") as diff from "Vehicles" v where id = $1`,
@@ -129,7 +131,9 @@ class Controller {
 
       const price = priceAdjuster(days, hours, minutes, type);
 
-      await Vehicle.update({ price }, { where: { id } });
+      const priceUpdate = await Vehicle.update({ price }, { where: { id } });
+
+      if (!priceUpdate) throw { name: "failed update" };
 
       res.status(200).json({ message: "success checkout" });
     } catch (err) {
