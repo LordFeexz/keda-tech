@@ -5,10 +5,28 @@ const priceAdjuster = require("../helpers/price");
 class Controller {
   static async getAll(req, res, next) {
     try {
-      const { type, checkinDate, checkoutDate, minPrice, maxPrice } = req.body;
+      let { type, checkinDate, checkoutDate, minPrice, maxPrice } = req.body;
 
       let option = {};
-      option.where = {};
+
+      if (checkinDate && !checkoutDate) checkoutDate = new Date();
+
+      if (checkinDate) {
+        option.where = {
+          [Op.or]: [
+            {
+              checkinDate: {
+                [Op.between]: [checkinDate, checkoutDate],
+              },
+            },
+            {
+              checkoutDate: {
+                [Op.between]: [checkinDate, checkoutDate],
+              },
+            },
+          ],
+        };
+      }
 
       if (type) {
         option.where.type = {
@@ -16,13 +34,6 @@ class Controller {
         };
       }
 
-      // if (checkinDate) {
-      //   option.where = {
-      //     from: {
-      //       $between: [checkinDate, checkoutDate],
-      //     },
-      //   };
-      // }
       const vehicle = await Vehicle.findAll(option);
 
       if (!vehicle || vehicle.length <= 0) throw { name: "Data not found" };
