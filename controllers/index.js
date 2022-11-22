@@ -35,7 +35,27 @@ class Controller {
         };
       }
 
-      if (minPrice) {
+      if (!checkinDate && checkoutDate) {
+        option.where = {
+          checkoutDate: {
+            [Op.lt]: checkoutDate,
+          },
+        };
+      }
+
+      if (minPrice && maxPrice) {
+        option.where = {
+          [Op.or]: [
+            {
+              price: {
+                [Op.between]: [minPrice, maxPrice],
+              },
+            },
+          ],
+        };
+      }
+
+      if (minPrice && !maxPrice) {
         option.where = {
           price: {
             [Op.gt]: minPrice,
@@ -43,7 +63,7 @@ class Controller {
         };
       }
 
-      if (maxPrice) {
+      if (maxPrice && !minPrice) {
         option.where = {
           price: {
             [Op.lt]: maxPrice,
