@@ -12,6 +12,20 @@ class Controller {
       next(err);
     }
   }
+
+  static async getOne(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const vehicle = await Vehicle.findOne({ where: { id } });
+
+      if (!vehicle) throw { name: "Data not found" };
+
+      res.status(200).json(vehicle);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;
