@@ -12,9 +12,6 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name == "Data not found") {
     status = 404;
     message = err.name;
-  } else if (err.name == "failed update") {
-    status = 503;
-    message = "unavailable to handle this request right now";
   }
 
   res.status(status).json({ message });

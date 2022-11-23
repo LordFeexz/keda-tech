@@ -120,11 +120,9 @@ class Controller {
 
       const price = priceAdjuster(days, hours, minutes, type);
 
-      const priceUpdate = await Vehicle.update({ price }, { where: { id } });
+      await Vehicle.update({ price }, { where: { id } });
 
-      if (!priceUpdate) throw { name: "failed update" };
-
-      res.status(200).json({ message: "success checkout" });
+      res.status(201).json({ message: "success checkout" });
     } catch (err) {
       next(err);
     }
