@@ -20,7 +20,7 @@ class Controller {
 
       if (checkinDate) {
         option.where.checkinDate = {
-          [Op.or]: [([Op.between] = [checkinDate, checkoutDate])],
+          [Op.between]: [checkinDate, checkoutDate],
         };
       }
 
@@ -32,7 +32,7 @@ class Controller {
 
       if (minPrice && maxPrice) {
         option.where.price = {
-          [Op.or]: [([Op.between] = [minPrice, maxPrice])],
+          [Op.between]: [minPrice, maxPrice],
         };
       }
 
