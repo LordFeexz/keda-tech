@@ -20,18 +20,7 @@ class Controller {
 
       if (checkinDate) {
         option.where.checkinDate = {
-          [Op.or]: [
-            {
-              checkinDate: {
-                [Op.between]: [checkinDate, checkoutDate],
-              },
-            },
-            {
-              checkoutDate: {
-                [Op.between]: [checkinDate, checkoutDate],
-              },
-            },
-          ],
+          [Op.or]: [([Op.between] = [checkinDate, checkoutDate])],
         };
       }
 
