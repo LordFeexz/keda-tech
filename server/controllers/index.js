@@ -97,12 +97,10 @@ class Controller {
     try {
       const { id } = req.params;
 
-      const checkout = await Vehicle.update(
+      await Vehicle.update(
         { checkoutDate: new Date(), status: "done" },
         { where: { id } }
       );
-
-      if (!checkout) throw { name: "failed update" };
 
       const diff = await sequelize.query(
         `select *, (v."checkoutDate" - v."checkinDate") as diff from "Vehicles" v where id = $1`,
