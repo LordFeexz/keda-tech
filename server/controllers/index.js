@@ -1,6 +1,7 @@
-const { Vehicle, sequelize } = require("../models");
-const { QueryTypes, Op } = require("sequelize");
+const { Vehicle } = require("../models");
+const { Op } = require("sequelize");
 const priceAdjuster = require("../helpers/price");
+const difference = require("../helpers/diff");
 
 class Controller {
   static async getAll(req, res, next) {
@@ -102,13 +103,7 @@ class Controller {
         { where: { id } }
       );
 
-      const diff = await sequelize.query(
-        `select *, (v."checkoutDate" - v."checkinDate") as diff from "Vehicles" v where id = $1`,
-        {
-          bind: [id],
-          type: QueryTypes.SELECT,
-        }
-      );
+      const diff = await difference(id);
 
       const { type } = diff[0];
 
