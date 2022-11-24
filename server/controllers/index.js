@@ -22,7 +22,10 @@ class Controller {
 
       if (checkinDate) {
         option.where.checkinDate = {
-          [Op.between]: [checkinDate, checkoutDate],
+          [Op.gt]: checkinDate,
+        };
+        option.where.checkoutDate = {
+          [Op.lt]: checkoutDate,
         };
       }
 
