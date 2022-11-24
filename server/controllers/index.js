@@ -2,6 +2,7 @@ const { Vehicle } = require("../models");
 const { Op } = require("sequelize");
 const priceAdjuster = require("../helpers/price");
 const difference = require("../helpers/diff");
+const sum = require("../helpers/sum");
 
 class Controller {
   static async getAll(req, res, next) {
@@ -116,6 +117,18 @@ class Controller {
       await Vehicle.update({ price }, { where: { id } });
 
       res.status(201).json({ message: "success checkout" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getSum(req, res, next) {
+    try {
+      const { type } = req.body;
+
+      const income = await sum(type);
+
+      res.status(200).json(income[0].sum);
     } catch (err) {
       next(err);
     }
