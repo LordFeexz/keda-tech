@@ -1,6 +1,8 @@
-const { Vehicle, sequelize } = require("../models");
-const { QueryTypes, Op } = require("sequelize");
+const { Vehicle } = require("../models");
+const { Op } = require("sequelize");
 const priceAdjuster = require("../helpers/price");
+const difference = require("../helpers/diff");
+const sum = require("../helpers/sum");
 
 class Controller {
   static async getAll(req, res, next) {
@@ -97,20 +99,12 @@ class Controller {
     try {
       const { id } = req.params;
 
-      const checkout = await Vehicle.update(
+      await Vehicle.update(
         { checkoutDate: new Date(), status: "done" },
         { where: { id } }
       );
 
-      if (!checkout) throw { name: "failed update" };
-
-      const diff = await sequelize.query(
-        `select *, (v."checkoutDate" - v."checkinDate") as diff from "Vehicles" v where id = $1`,
-        {
-          bind: [id],
-          type: QueryTypes.SELECT,
-        }
-      );
+      const diff = await difference(id);
 
       const { type } = diff[0];
 
@@ -120,11 +114,21 @@ class Controller {
 
       const price = priceAdjuster(days, hours, minutes, type);
 
-      const priceUpdate = await Vehicle.update({ price }, { where: { id } });
+      await Vehicle.update({ price }, { where: { id } });
 
-      if (!priceUpdate) throw { name: "failed update" };
+      res.status(201).json({ message: "success checkout" });
+    } catch (err) {
+      next(err);
+    }
+  }
 
-      res.status(200).json({ message: "success checkout" });
+  static async getSum(req, res, next) {
+    try {
+      const { type } = req.body;
+
+      const income = await sum(type);
+
+      res.status(200).json(income[0].sum);
     } catch (err) {
       next(err);
     }

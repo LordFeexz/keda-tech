@@ -6,6 +6,8 @@ router.get("/", Controller.getAll);
 
 router.post("/", Controller.create);
 
+router.get("/income", Controller.getSum);
+
 router.get("/:id", Controller.getOne);
 
 router.put("/:id", Controller.checkout);
