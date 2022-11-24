@@ -307,7 +307,7 @@ describe("get all data", () => {
     expect(result.body[0]).toHaveProperty("id", expect.any(Number));
     expect(result.body[0]).toHaveProperty("type", expect.any(String));
     expect(result.body[0]).toHaveProperty("plat", expect.any(String));
-    expect(result.body[0].checkinDate).toEqual("2022-11-22T08:20:09.927Z");
+    expect(result.body[0].checkinDate).toEqual("2022-11-22T08:19:40.743Z");
     expect(result.body[0].price).toEqual(0);
     expect(result.body[0]).toHaveProperty("status", expect.any(String));
   });
