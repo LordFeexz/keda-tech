@@ -592,3 +592,25 @@ describe("checkout", () => {
     expect(result.body).toHaveProperty("message", "success checkout");
   });
 });
+
+describe("get sum", () => {
+  it("get /income => success test status(200)", async () => {
+    const result = await request(app).get("/income");
+    expect(result.status).toBe(200);
+
+    expect(result.body).toBeInstanceOf(Array);
+    expect(result.body[0]).toBeInstanceOf(Object);
+    expect(result.body[0]).toHaveProperty("sum", expect.any(String));
+  });
+});
+
+describe("get sum", () => {
+  it("get /income => success test status with type(200)", async () => {
+    const result = await request(app).get("/income").send({ type: "mobil" });
+    expect(result.status).toBe(200);
+
+    expect(result.body).toBeInstanceOf(Array);
+    expect(result.body[0]).toBeInstanceOf(Object);
+    expect(result.body[0]).toHaveProperty("sum", expect.any(String));
+  });
+});

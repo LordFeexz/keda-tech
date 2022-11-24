@@ -131,7 +131,7 @@ class Controller {
 
       const income = await sum(type);
 
-      res.status(200).json(income[0].sum);
+      res.status(200).json(income);
     } catch (err) {
       next(err);
     }
